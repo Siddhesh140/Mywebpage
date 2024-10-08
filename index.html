@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion E-Commerce</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Fashion E-Commerce</h1>
+        <form id="signupForm">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required><br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br>
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required><br>
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br>
+            <input type="submit" value="Sign Up">
+        </form>
+    </div>
+    <footer>
+        <p>Contact us at: info@fashion-ecommerce.com</p>
+    </footer>
+    <script>
+        function hashPassword(password) {
+            // Simple hash function for demonstration purposes. Use a secure hashing library in production.
+            return btoa(password); // base64 encoding
+        }
+
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const dob = new Date(document.getElementById('dob').value);
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const month = today.getMonth() - dob.getMonth();
+            if (month < 0 || (month === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+            if (age >= 14) {
+                const user = {
+                    username: document.getElementById('username').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    dob: document.getElementById('dob').value,
+                    password: hashPassword(document.getElementById('password').value)
+                };
+                let users = JSON.parse(localStorage.getItem('users')) || [];
+                users.push(user);
+                localStorage.setItem('users', JSON.stringify(users));
+                window.location.href = 'login.html';
+            } else {
+                alert('You must be at least 14 years old to sign up.');
+            }
+        });
+    </script>
+</body>
+</html>

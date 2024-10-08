@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion E-Commerce - User List</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Registered Users</h1>
+        <button id="deleteSelected">Delete Selected</button>
+        <table id="userTable">
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                    <th>Date of Birth</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- User data will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+    <footer>
+        <p>Contact us at: info@fashion-ecommerce.com</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+            if (!loggedInUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const tbody = document.querySelector('#userTable tbody');
+            if (users.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td colspan="5">No users have signed up yet.</td>`;
+                tbody.appendChild(row);
+            } else {
+                users.forEach((user, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><input type="checkbox" class="userCheckbox" data-index="${index}"></td>
+                        <td>${user.username}</td>
+                        <td>${user.email}</td>
+                        <td>${user.phone}</td>
+                        <td>${user.dob}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+        });
+
+        document.getElementById('deleteSelected').addEventListener('click', function() {
+            const checkboxes = document.querySelectorAll('.userCheckbox:checked');
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            checkboxes.forEach(checkbox => {
+                const index = checkbox.getAttribute('data-index');
+                users.splice(index, 1);
+            });
+            localStorage.setItem('users', JSON.stringify(users));
+            location.reload();
+        });
+    </script>
+</body>
+</html>
